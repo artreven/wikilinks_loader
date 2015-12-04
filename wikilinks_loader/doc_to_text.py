@@ -1,18 +1,13 @@
 """
 Stores functions for fetching documents from the web.
-
-
 """
 
 import urllib.request
 import tempfile
-import socket
-import ssl
-import http.client
 from subprocess import Popen, PIPE
 from docx import Document
-import docx
 from bs4 import BeautifulSoup
+
 
 def doc_to_text(doc_path, extension=None):
     """
