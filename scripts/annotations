@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+"""
+Loader for Wikilinks data (see http://www.iesl.cs.umass.edu/data/wiki-links).
+
+If you are interested in finding different annotations for some entity run
+"annotations [wikilinks_path] [output_path] [entity]". [wikilinks_path] is the path to the folder where
+Wikilinks files are stored. Output is a text file in [output_path] containing found annotations, documents and offsets
+where the annotations are mentioned. [entity] is the name of the entity of interest.
+
+Example:
+annotations [wikilinks_path] [output_path] Java
+"""
+
+import argparse
+import sys
+
+import wikilinks_loader
+
+parser = argparse.ArgumentParser(description="Find ambiguous annotations of a given entity using Wikilinks.")
+parser.add_argument('wikilinks_path', type=str, help="The path to Wikilinks folder.")
+parser.add_argument('output_path', type=str, help="The path to output file.")
+parser.add_argument('entity', type=str, help="Name of the entity of interest.")
+
+
+if len(sys.argv) < 4:
+    parser.print_help()
+    sys.exit(1)
+
+args = parser.parse_args()
+wikilinks_loader.check_wikilinks_files(args.wikilinks_path)
+wikilinks_filenames = wikilinks_loader.wikilinks_files(args.wikilinks_path)
+ae = wikilinks_loader.find_annotations(args.entity, wikilinks_filenames)
+wikilinks_loader.output_ambiguous_entity(ae, args.output_path)

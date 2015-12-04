@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+"""
+Loader for Wikilinks data (see http://www.iesl.cs.umass.edu/data/wiki-links).
+
+If you want to find a list of ambiguous entities together with possible annotations (and their counts) run
+"ambiguous_entities [wikilinks_path] [output_path] -n=[number]", [number] is the number of required ambiguous entities.
+Output is a text file in [output_path] with ambiguous entities, annotations and their counts. [wikilinks_path] is the
+path to the folder where Wikilinks files are stored.
+Additional parameters:
+-m [threshold] : number of mentions of an annotation to be counted as frequent (default 5)
+-a [number] : number of required different annotations for each entity (default 2)
+
+Example:
+ambiguous_entities [wikilinks_path] [output_path] 3
+"""
+
+import argparse
+import sys
+
+import wikilinks_loader
+
+parser = argparse.ArgumentParser(description="Find ambiguous entities using Wikilinks.")
+parser.add_argument('wikilinks_path', type=str, help="The path to Wikilinks folder.")
+parser.add_argument('output_path', type=str, help="The path to output file.")
+parser.add_argument('entities_number', type=int, help="How many ambiguous entities should be found.")
+parser.add_argument('-m', '--mentions', type=int, nargs='?', default=5,
+                    help="How many times each frequent annotation should be mentioned.")
+parser.add_argument('-a', '--annotations', type=int, nargs='?', default=2,
+                    help="How many annotations are needed for each ambiguous entity.")
+
+
+if len(sys.argv) < 4:
+    parser.print_help()
+    sys.exit(1)
+
+args = parser.parse_args()
+wikilinks_loader.check_wikilinks_files(args.wikilinks_path)
+wikilinks_filenames = wikilinks_loader.wikilinks_files(args.wikilinks_path)
+mentions = wikilinks_loader.find_ambiguous_entities(args.entities_number, wikilinks_filenames, args.mentions, args.annotations)
+wikilinks_loader.output_mentions(mentions, args.output_path)

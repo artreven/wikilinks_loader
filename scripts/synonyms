@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+"""
+Loader for Wikilinks data (see http://www.iesl.cs.umass.edu/data/wiki-links).
+
+If you want to find different synonyms of a concept (from Wikipedia) mentioned in wikilinks run
+"synonyms [wikilinks_path] [output_path] [wiki_url]". Output is a text file in [output_path] with surface
+forms, documents, where the forms are mentioned, and offsets in the documents. [wikilinks_path] is the path to the
+folder where wikilinks files are stored.
+
+Example:
+synonyms [wikilinks_path] [output_path] https://en.wikipedia.org/wiki/Putin
+"""
+
+import argparse
+import sys
+
+import wikilinks_loader
+
+parser = argparse.ArgumentParser(description="Find different surface forms of a concept using Wikilinks.")
+parser.add_argument('wikilinks_path', type=str, help="The path to Wikilinks folder.")
+parser.add_argument('output_path', type=str, help="The path to output file.")
+parser.add_argument('wiki_url', type=str, help="Wikipedia URL of the concept of interest.")
+
+
+if len(sys.argv) < 4:
+    parser.print_help()
+    sys.exit(1)
+
+args = parser.parse_args()
+wikilinks_loader.check_wikilinks_files(args.wikilinks_path)
+wikilinks_filenames = wikilinks_loader.wikilinks_files(args.wikilinks_path)
+forms = wikilinks_loader.find_synonyms(args.wiki_url, wikilinks_filenames)
+wikilinks_loader.output_forms(forms, args.output_path)
