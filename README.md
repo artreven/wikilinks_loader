@@ -18,10 +18,3 @@ final one after all redirections.
 
 To learn more about wikilinks dataset see the [technical report](https://web.cs.umass.edu/publication/docs/2012/UM-CS-2012-015.pdf)
 or visit [their homepage](http://www.iesl.cs.umass.edu/data/wiki-links).
-
----
-
-## doc_to_text
-
-This module offers functionality of casting documents to text. Documents are expected to be in either of formats: 
-.html, .doc, .docx, .pdf, .odt.
